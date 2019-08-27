@@ -47,8 +47,10 @@ before_build:
   - mkdir build
   - cd build
   - ps: Start-FileDownload https://github.com/rgleason/tactics_pi/releases/download/Downloads/opencpn.lib
- #  - ps: Start-FileDownload https://downloads.sourceforge.net/project/opencpnplugins/opencpn_packaging_data/OpenCPN_buildwin.7z
-  - cmd: 7z x -y OpenCPN_buildwin.7z -oc:\project\watchdog_pi\buildwin
+  - ps: Start-FileDownload http://opencpn.navnux.org/build_deps/OpenCPN_buildwin-4.99a.7z
+  - cmd: 7z x -y OpenCPN_buildwin-4.99a.7z -oc:\project\watchdog_pi\buildwin
+#  - ps: Start-FileDownload https://downloads.sourceforge.net/project/opencpnplugins/opencpn_packaging_data/OpenCPN_buildwin.7z
+#  - cmd: 7z x -y OpenCPN_buildwin.7z -oc:\project\watchdog_pi\buildwin
   - cmake -T v141_xp ..
 
 # to run your custom scripts instead of automatic MSBuild

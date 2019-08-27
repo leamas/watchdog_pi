@@ -65,7 +65,7 @@ addons:
 deploy:
 - provider: releases
   api_key: # $GitHub_auth_token
-    secure:																																																																																																																																																																																																								
+    secure:	"JRqEYQ/ohM2EXSXZPIFVuBN6GT8aVkzqQie9/+bxoCoZhv6nKxbC9RqZr5zVaWHklyFMZK/GUv1P6iGjzsTTsqdBXdEJ8VejFFZBz1Jj92d2R3in8GwE3qBo8HpACG7X/SEeblu4Asm8XUFV6AXE1yx5mL9H1SdYQQa7rYRqdHn0VDAuGyKRkbwiLnmZ2zzGYQweT3nPTjO7j1IYlKGqAfIh21aWj/SPPjgeNufSOJoh5vCx+9ye0tuMgHfRRdQSj8ogGW+8Z4woWFGEQMoveyNo5tTbahhMwqHGQB2wcYxCMOGaqwH3eBmkACKvmB+YQxyO2keD2sccTDPeS797U1lV1d6DzYZnVM0kHSyKD3K7ei+k68FqoKO5FCUkdB9R1WbOT8ePv+me80nDVIpt488y58fepMeJZgMm1ucfjFolOwnwY43C1E2IS9uRKk0Uu8a5MSFTkNd42A+9q9+sjFd3hmsrK35H4CI8ZWcopwCpUnx5FnDh9RPJ/wwr08s9J8b6hsrphU0GhI/qaytRSklDUjKdLJU2y/N1qG+NPS2NjRSPRojfrya9G6Ro022euaSBM6iiTHsC2WF44+DN6sd2EOjNcKd+HY2CfsT4ffxuHh9/ZeMtcgXjaZRJ6bqWW1qeBZ6jOpq3B5sCY1+LC5JDNzH2YcKK9O3nPztlXdA="
   file_glob: true
   file: $TRAVIS_BUILD_DIR/build/*.{deb,rpm,dmg,txz,pkg,pkg.tar.xz}
   skip_cleanup: true

@@ -21,7 +21,9 @@
 #-----------------------------------------------------------------------------
 # Frontend2 Author: Jon Gough  
 # ---------------------------------------------------------------------------
-# CMake-CI Number: 0.0.004  
+# CMake-CI Number: 0.0.005  
+#    - 2/19/2020 10 environments needed for beta testing.
+#    - 3/30/2020 MacOS build fixed 12 env
 # ---------------------------------------------------------------------------
 # ----- Modify section below to include all the details for your plugin ----- ##
 
@@ -61,7 +63,7 @@ set(GIT_REPOSITORY_NAME "watchdog_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
 
-## Allows setup of a local webserver with git for testing
+# Permits setup of a local webserver with git for testing
 if($ENV{CIRCLECI})
   set(GIT_REPOSITORY_HOST "github.com")
   set(GIT_REPOSITORY_DIR "${GIT_USER}/")
@@ -119,12 +121,13 @@ set(XML_DESCRIPTION "Simple image overlay calibration, Converts any image image 
 #------Settings
 SET(BUNDLE_DATA FALSE)  #from wd
 SET(CMAKE_MACOSX_RPATH "ON")  #from WD
+
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)  
+
 #OPTION(WATCHDOG_USE_SVG "Use SVG graphics" ON) #from WD
+
 SET(CMAKE_CXX_STANDARD 11)  #also from WD
 
-# Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")
 #------ End Settings
 
 if(NOT ${PACKAGE} MATCHES "(.*)_pi")
@@ -145,6 +148,9 @@ message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VER
 message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
 
 #------Settings
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
+								  
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
 
@@ -174,10 +180,12 @@ message(STATUS "PACKAGING_NAME: ${PACKAGING_NAME}")
 
 set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
+# Settings and Options
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
+# Check on compiler support						   
 if(Plugin_CXX11)
   message(STATUS "Attempting to use c++11")
   include(CheckCXXCompilerFlag)
@@ -237,16 +245,17 @@ if(CMAKE_VERSION VERSION_GREATER 3.9)
   endif()
 endif()
 
-#
 # ----- Modify section above for special plugin requirements----- ##
 #
-## --Section above is direct from Weatherfax located above SET(SRC_WEATHERFAX  ---##
 #===========================================================
 INCLUDE("cmake/PluginConfigure.cmake")
 #===========================================================
 # ----- Change below to match project requirements ----- ##
-# ++++++++++++++Section below is direct from Watchdog +++++++++##
 
+add_definitions(-DUSE_S57)
+
+# ++++++++++++++Section below is direct from Watchdog +++++++++##
+# ----Remember to Add your project Set(SRCS and set(HDRS  etc..
 # needed?
 IF(WATCHDOG_USE_SVG)
   ADD_DEFINITIONS(-DWATCHDOG_USE_SVG)
@@ -295,6 +304,23 @@ SET(HDRS
 #INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/src/libaudiofile)
 #INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/src/plugingl)
 INCLUDE_DIRECTORIES(api-16)
+add_definitions(-DPLUGIN_USE_SVG)							 
+##=============================================================
+# Modify/configure 'Include' Directories below for the Plugin
+##=============================================================
+#  EG   also in cmake/Plugin____.cmake files
+# include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/extinclude)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wx/include)
+
+##================================================================================
+## Required to collect all the set( headers and SRCS  - Adjust as required
+## This add_library  can be used in conditionals below.
+##================================================================================	
+#    SET(EXTSRC  ${EXTSRC}   etc   Can be in an if statement as below
+##================================================================================
+
 
 # ----- Change above to match project requirements ----- ##
 #--------REMOVE LN 194 to LN 296 from Testplugin_pi---------------
@@ -329,6 +355,8 @@ INCLUDE_DIRECTORIES(api-16)
 if(UNIX)
     add_definitions("-fpic")
 endif(UNIX)
+
+add_definitions(-DTIXML_USE_STL)								
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${HDRS} ${SRC_JSON} ${SRC_NMEA0183} ${SRC_LTINYXML})
 # ENDIF(TINYXML_FOUND)
